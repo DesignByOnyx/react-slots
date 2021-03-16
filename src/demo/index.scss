@@ -1,0 +1,58 @@
+details {
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+
+  & > summary {
+    padding: 0.5em;
+  }
+
+  & > footer {
+    padding: 0.5em;
+    background: #eee;
+  }
+
+  &[open] {
+    padding: 1em;
+
+    & > summary {
+      margin: -1em -1em 1em;
+    }
+  }
+}
+
+.page-layout {
+  border: 1px solid #ccc;
+
+  & > header {
+    padding: 1em;
+    background: #cee;
+  }
+
+  & > .content {
+    display: flex;
+
+    & > main {
+      flex-grow: 1;
+      padding: 1em;
+    }
+
+    & > aside {
+      background: #ece;
+      width: 20%;
+      padding: 1em;
+    }
+  }
+
+  & > footer {
+    padding: 1em;
+    background: #eec;
+  }
+}
+
+.code-example {
+  display: flex;
+
+  & > * {
+    width: 50%;
+  }
+}
