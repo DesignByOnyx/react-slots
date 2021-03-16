@@ -18,6 +18,17 @@ details {
       margin: -1em -1em 1em;
     }
   }
+
+  pre {
+    padding-right: 2em;
+
+    code {
+      display: block;
+      padding: 1em;
+      color: #555;
+      background: #eee;
+    }
+  }
 }
 
 .page-layout {

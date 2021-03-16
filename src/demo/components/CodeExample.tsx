@@ -1,5 +1,5 @@
 import React from "react";
-import { SlotHost, Slot, IfSlotAssigned } from "../";
+import { SlotHost, Slot, IfSlotAssigned } from "../..";
 
 type CodeExampleProps = JSX.IntrinsicElements["div"] & {
   title: string;

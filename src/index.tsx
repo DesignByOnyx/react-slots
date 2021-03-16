@@ -14,6 +14,7 @@ import {
 
 type SlotProps = {
   name?: string;
+  [bindProps: string]: any;
 };
 type TemplateProps = {
   slot: string;

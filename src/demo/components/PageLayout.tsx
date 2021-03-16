@@ -1,11 +1,11 @@
 import React from "react";
-import { SlotHost, Slot, IfSlotAssigned } from "../";
+import { SlotHost, Slot, IfSlotAssigned } from "../..";
 
 type PageLayoutProps = JSX.IntrinsicElements["div"];
 
-const PageLayout: React.FC<PageLayoutProps> = (props) => {
+const PageLayout: React.FC<PageLayoutProps> = ({ className, ...props }) => {
   return (
-    <div className="page-layout">
+    <div className={`page-layout ${className || ""}`} {...props}>
       <header>
         <Slot name="header">Default Header</Slot>
       </header>
