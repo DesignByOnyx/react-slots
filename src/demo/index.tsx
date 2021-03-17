@@ -57,7 +57,7 @@ const PageLayout = () => {
       </div>
       <IfSlotAssigned name="footer">
         <footer>
-          <Slot name="footer">Default footer</Slot>
+          <Slot name="footer" />
         </footer>
       </IfSlotAssigned>
     </div>
@@ -119,7 +119,7 @@ export default SlotHost(ClassComponent)`)}
       </CodeExample>
     </DemoContainer>
 
-    <DemoContainer summary="Passing custom data to slots">
+    <DemoContainer summary="Advanced: Passing custom data to slots">
       <Template slot="component-code">
         {trimFirst(`
 const DataProvider = () => {
@@ -131,7 +131,7 @@ const DataProvider = () => {
     </div>
   );
 };
-export default SlotHost(DataProvider`)}
+export default SlotHost(DataProvider)`)}
       </Template>
 
       <CodeExample title="Usage:">

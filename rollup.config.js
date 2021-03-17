@@ -10,51 +10,60 @@ import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 
 const packageJson = require("./package.json");
+const isDemo = process.env.NODE_ENV === "demo";
 const isProd = process.env.NODE_ENV === "production";
-const DEST_DIR = "dist";
+const isWatching = process.env.ROLLUP_WATCH;
+const DEMO_DIR = "docs"; // used for github-pages
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
-const demoPlugins = isProd
-  ? []
-  : [
-      html({
-        fileName: "index.html",
-        title: "Rollup + TypeScript + React = ❤️",
-        template: ({ title }) => {
-          return `
+const additionalPlugins = [];
+if (isDemo) {
+  additionalPlugins.push(
+    scss({
+      output: `${DEMO_DIR}/index.css`
+    }),
+    html({
+      fileName: "index.html",
+      title: "React Slots Demo",
+      template: ({ title }) => `
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>${title}</title>
-    <link rel="stylesheet" href="index.css">
-    <script crossorigin src="https://unpkg.com/react/umd/react.development.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script src="index.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>${title}</title>
+  <link rel="stylesheet" href="index.css">
+  <script crossorigin src="https://unpkg.com/react/umd/react.development.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="index.js"></script>
+</body>
 </html>
-`;
-        }
-      }),
+`
+    })
+  );
+
+  if (isWatching) {
+    additionalPlugins.push(
       serve({
         host: "localhost",
         port: 3000,
         open: true,
-        contentBase: [`${DEST_DIR}`]
+        contentBase: [`${DEMO_DIR}`]
       }),
       livereload({
-        watch: `${DEST_DIR}`
+        watch: `${DEMO_DIR}`
       })
-    ];
+    );
+  }
+}
 
 export default {
-  input: isProd ? "src/index.tsx" : "src/demo/index.tsx",
+  input: isDemo ? "src/demo/index.tsx" : "src/index.tsx",
   external: ["react"],
   output: [
     {
-      file: packageJson.main,
+      file: isDemo ? `${DEMO_DIR}/index.js` : packageJson.main,
       format: "umd",
       sourcemap: true,
       name: "ReactSlots",
@@ -62,26 +71,25 @@ export default {
         react: "React"
       }
     },
-    {
-      file: packageJson.module,
-      format: "esm",
-      sourcemap: true
-    }
+    isDemo
+      ? null
+      : {
+          file: packageJson.module,
+          format: "esm",
+          sourcemap: true
+        }
   ],
   plugins: [
     replace({
       preventAssignment: true,
       "process.env.NODE_ENV": JSON.stringify(
-        isProd ? "production" : "development"
+        process.env.NODE_ENV || "development"
       )
     }),
     peerDepsExternal(),
     resolve({ extensions }),
     commonjs(),
     typescript({ useTsconfigDeclarationDir: true }),
-    scss({
-      output: `${DEST_DIR}/index.css`
-    }),
     isProd && terser()
-  ].concat(demoPlugins)
+  ].concat(additionalPlugins)
 };

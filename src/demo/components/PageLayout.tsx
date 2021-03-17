@@ -19,7 +19,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ className, ...props }) => {
       </div>
       <IfSlotAssigned name="footer">
         <footer>
-          <Slot name="footer">Default footer</Slot>
+          <Slot name="footer" />
         </footer>
       </IfSlotAssigned>
     </div>

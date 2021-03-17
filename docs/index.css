@@ -1,0 +1,42 @@
+details {
+  margin-bottom: 1em;
+  border: 1px solid #ccc; }
+  details > summary {
+    padding: 0.5em; }
+  details > footer {
+    padding: 0.5em;
+    background: #eee; }
+  details[open] {
+    padding: 1em; }
+    details[open] > summary {
+      margin: -1em -1em 1em; }
+  details pre {
+    padding-right: 2em; }
+    details pre code {
+      display: block;
+      padding: 1em;
+      color: #555;
+      background: #eee; }
+
+.page-layout {
+  border: 1px solid #ccc; }
+  .page-layout > header {
+    padding: 1em;
+    background: #cee; }
+  .page-layout > .content {
+    display: flex; }
+    .page-layout > .content > main {
+      flex-grow: 1;
+      padding: 1em; }
+    .page-layout > .content > aside {
+      background: #ece;
+      width: 20%;
+      padding: 1em; }
+  .page-layout > footer {
+    padding: 1em;
+    background: #eec; }
+
+.code-example {
+  display: flex; }
+  .code-example > * {
+    width: 50%; }

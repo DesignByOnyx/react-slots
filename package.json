@@ -18,12 +18,13 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "prebuild:demo": "rimraf demo",
+    "build:demo": "cross-env NODE_ENV=demo rollup -c",
     "test": "jest",
-    "dev": "rollup -c -w",
+    "dev": "npm run build:demo -- -w",
     "test:watch": "jest --watch",
-    "storybook": "start-storybook -p 6006",
-    "storybook:export": "build-storybook",
+    "preversion": "npm run build:demo",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

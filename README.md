@@ -2,6 +2,8 @@
 
 This is a set of components which provide a similar and familiar implementation of the HTML5 `<slot>` behavior for react. Please note, this does not use _real_ slots under the hood, but rather provides developers with the same expressive experience.
 
+Check out the [demo](https://designbyonyx.github.io/react-slots/)!
+
 ```zsh
 npm install react-slots
 yarn add react-slots
