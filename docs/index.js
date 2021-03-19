@@ -1,3 +1,5 @@
+
+(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('react')) :
 	typeof define === 'function' && define.amd ? define(['react'], factory) :
@@ -27569,6 +27571,8 @@
 
 	const PARENT_SLOT_CTX = "___parentSlotCtx";
 	const DEFAULT_SLOT_NAME = "default";
+	const SlotContext = React.createContext({});
+	/** Crawl up the context tree until we find a matching slot name */
 	const getSlotContent = (clotCtx, name) => {
 	    let ctx = clotCtx;
 	    while (ctx) {
@@ -27579,39 +27583,6 @@
 	    }
 	};
 
-	const SlotContext = React.createContext({});
-	/**
-	 * Higher Order Component for creating a slotted component
-	 * @param Component
-	 * @returns
-	 */
-	const SlotHost = (Component) => ({ children, ...props }) => {
-	    const slotCtx = React.useContext(SlotContext);
-	    const namedSlots = React.useMemo(() => {
-	        return React__default['default'].Children.toArray(children).reduce((obj, child) => {
-	            if (React.isValidElement(child)) {
-	                const { slot, children } = child.props;
-	                if (slot && slot !== DEFAULT_SLOT_NAME) {
-	                    // named slot, last one wins, even if it's nullish
-	                    obj[slot] =
-	                        child.type === Template
-	                            ? children == null
-	                                ? null
-	                                : children
-	                            : child;
-	                    return obj;
-	                }
-	            }
-	            obj[DEFAULT_SLOT_NAME].push(child);
-	            return obj;
-	        }, {
-	            [DEFAULT_SLOT_NAME]: [],
-	            [PARENT_SLOT_CTX]: slotCtx
-	        });
-	    }, [children]);
-	    return (React__default['default'].createElement(SlotContext.Provider, { value: namedSlots },
-	        React__default['default'].createElement(Component, Object.assign({}, props))));
-	};
 	const Slot = ({ name = DEFAULT_SLOT_NAME, children: fallback, ...bindProps }) => {
 	    const slotCtx = React.useContext(SlotContext);
 	    const slotContent = getSlotContent(slotCtx, name);
@@ -27628,14 +27599,53 @@
 	        })
 	        : fallback || null;
 	};
+
 	const Template = ({ children }) => children;
 	Template.defaultProps = { slot: DEFAULT_SLOT_NAME };
+
 	/**
 	 * Renders content only when the named slot is assigned content.
 	 */
 	const IfSlotAssigned = ({ name, children }) => {
 	    const slotCtx = React.useContext(SlotContext);
 	    return slotCtx.hasOwnProperty(name) ? children : null;
+	};
+
+	const makeContextFromChildren = (children, parentContext) => {
+	    return React__default['default'].Children.toArray(children).reduce((obj, child) => {
+	        if (React.isValidElement(child)) {
+	            const { slot, children } = child.props;
+	            if (slot && slot !== DEFAULT_SLOT_NAME) {
+	                // named slot, last one wins, even if it's nullish
+	                // TODO: collect all?
+	                obj[slot] =
+	                    child.type === Template
+	                        ? children == null
+	                            ? null
+	                            : children
+	                        : child;
+	                return obj;
+	            }
+	        }
+	        obj[DEFAULT_SLOT_NAME].push(child);
+	        return obj;
+	    }, {
+	        [DEFAULT_SLOT_NAME]: [],
+	        [PARENT_SLOT_CTX]: parentContext
+	    });
+	};
+	/**
+	 * Higher Order Component for creating a slotted component
+	 * @param Component
+	 * @returns
+	 */
+	const SlotHost = (Component) => ({ children, ...props }) => {
+	    const slotCtx = React.useContext(SlotContext);
+	    const namedSlots = React.useMemo(() => {
+	        return makeContextFromChildren(children, slotCtx);
+	    }, [children]);
+	    return (React__default['default'].createElement(SlotContext.Provider, { value: namedSlots },
+	        React__default['default'].createElement(Component, Object.assign({}, props))));
 	};
 
 	const SimpleButton = SlotHost((props) => {

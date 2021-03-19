@@ -1,5 +1,5 @@
 import React from "react";
-import { SlotHost, Slot, Template } from "../..";
+import { SlotHost, Slot } from "../..";
 import CodeExample from "./CodeExample";
 
 type DemoContainerProps = JSX.IntrinsicElements["details"] & {
